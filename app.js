@@ -1,27 +1,41 @@
 const express = require('express')
 const helmet = require('helmet')
-const { nodeConstants } = require('./constants')
 const cors = require('cors')({ origin: true, credentials: true })
-const EventEmitter = require('events')
-const nats = require('./helpers/nats.helpers')
+const responseTime = require('response-time')
+const mongoose = require('mongoose')
+const swaggerUi = require('swagger-ui-express')
+
+const { envConstants } = require('./constants')
 
 const app = express()
 app.use(helmet())
 app.use(cors)
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
+app.use(responseTime({ suffix: false, digits: 0 }))
+
+/* MongoDB */
+mongoose.Promise = global.Promise
+mongoose.connect(envConstants.MONGODB_URI)
+require('./models/log.model')
+
+/* Middlewares */
+const callLoggerMiddleware = require('./middlewares/call-logger.middleware')
+const errorLoggerMiddleware = require('./middlewares/error-logger.middleware')
+
+app.use(callLoggerMiddleware)
+
+/* OpenAPI */
+// const swaggerDocument = require('./openapi')
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 /* Routes */
-const baseRoute = require('./routes/base')
-app.use('/', baseRoute)
+const statusRoutes = require('./routes/status.routes')
+const logRoutes = require('./routes/log.routes')
 
-/* NATS */
-const ee = new EventEmitter()
-nats.subscribe(ee)
+app.use('/', statusRoutes)
+app.use('/', logRoutes)
 
-ee.on(nodeConstants.EVENT_EMITTER, (text) => {
-  // message received
-  // write to mongodb
-  //delivery to ws if socket is present
-  // nats.publish()
-})
+app.use(errorLoggerMiddleware)
 
 module.exports = app
