@@ -3,5 +3,5 @@ registry:
     log: ghcr.io/krateoplatformops/log-service:latest
 
 log:
-  level: "info"
+  level: "debug"
   host: "log.krateo.site"

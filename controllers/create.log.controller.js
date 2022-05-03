@@ -16,6 +16,9 @@ router.post('/', async (req, res, next) => {
     if (!payload.time) {
       payload.time = timeHelpers.currentTime()
     }
+
+    logger.debug(JSON.stringify(payload))
+
     Log.create(payload)
       .then(async (doc) => {
         if (req.body.transactionId) {
