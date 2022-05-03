@@ -4,3 +4,4 @@ registry:
 
 log:
   level: "info"
+  host: "log.krateo.site"
