@@ -23,7 +23,7 @@ router.post('/', async (req, res, next) => {
       .then(async (doc) => {
         if (req.body.transactionId) {
           const resp = await axios.post(envConstants.SOCKET_URI, doc)
-          logger.debug(resp)
+          logger.debug(JSON.stringify(resp.data))
         }
 
         res.status(200).json(doc)
