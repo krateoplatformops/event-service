@@ -1,10 +1,12 @@
 const express = require('express')
 const router = express.Router()
 const mongoose = require('mongoose')
+const envConstants = require('../constants/env.constants')
 
-const Endpoint = mongoose.model('Endpoint')
+const Log = mongoose.model('Log')
 const timeHelpers = require('../helpers/time.helpers')
-const uriHelpers = require('../helpers/uri.helpers')
+const axios = require('axios')
+const { logger } = require('../helpers/logger.helpers')
 
 router.post('/', async (req, res, next) => {
   try {
@@ -14,9 +16,14 @@ router.post('/', async (req, res, next) => {
     if (!payload.time) {
       payload.time = timeHelpers.currentTime()
     }
-    Log.create(log)
-      .then((endpoint) => {
-        res.status(200).json(log)
+    Log.create(payload)
+      .then(async (doc) => {
+        if (req.body.transactionId) {
+          const resp = await axios.post(envConstants.SOCKET_URI, doc)
+          logger.debug(resp)
+        }
+
+        res.status(200).json(doc)
       })
       .catch((error) => {
         next(error)
