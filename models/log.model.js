@@ -29,8 +29,9 @@ const logSchema = new Schema({
   transactionId: {
     type: String,
     required: true
-  },
-  createdAt: { type: Date, expires: envConstants.LOG_TTL, default: Date.now }
+  }
 })
+
+logSchema.index({ time: 1 }, { name: 'logIndex', expireAfterSeconds: 3600 })
 
 module.exports = mongoose.model('Log', logSchema, dbConstants.COLLECTION_LOG)
