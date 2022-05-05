@@ -26,15 +26,15 @@ const logSchema = new Schema({
     type: String,
     required: true
   },
-  transactionId: {
+  deploymentId: {
     type: String,
     required: true
   }
 })
 
 logSchema.index(
-  { time: 1, transactionId: 1 },
-  { name: 'logIndex', expireAfterSeconds: 3600 }
+  { time: 1, deploymentId: 1 },
+  { name: 'logIndex', expireAfterSeconds: envConstants.LOG_TTL }
 )
 
 module.exports = mongoose.model('Log', logSchema, dbConstants.COLLECTION_LOG)
