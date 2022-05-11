@@ -1,6 +1,6 @@
 apiVersion: v2
-name: api-krateo
-description: Krateo PlatformOps Argocd Service
+name: log-service
+description: Krateo PlatformOps Log Service
 type: application
 
 version: 0.1.0
