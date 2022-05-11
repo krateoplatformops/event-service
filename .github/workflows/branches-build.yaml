@@ -42,7 +42,6 @@ jobs:
         run: echo ${{ steps.docker_build.outputs.digest }}
 
       - uses: actions/checkout@v3
-      - run: ls -la
       - name: Publish Helm chart
         uses: stefanprodan/helm-gh-pages@master
         with:
