@@ -47,7 +47,7 @@ jobs:
         with:
           token: ${{ secrets.HELM_CHARTS_BOT }}
           charts_dir: ./
-          charts_url: https://helm-charts.krateoplatformops.io
+          charts_url: https://charts.krateo.io
           owner: krateoplatformops
           repository: helm-charts
           branch: gh-pages
