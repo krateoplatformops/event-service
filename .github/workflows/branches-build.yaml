@@ -40,3 +40,14 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - uses: actions/checkout@v2
+      - name: Publish Helm chart
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          charts_dir: chart
+          charts_url: https://charts.krateoplatformops.io
+          owner: krateoplatformops
+          repository: helm-charts
+          branch: gh-pages
