@@ -46,9 +46,10 @@ jobs:
       - name: Publish Helm chart
         uses: stefanprodan/helm-gh-pages@master
         with:
-          token: ${{ secrets.CHART_TOKEN }}
+          token: ${{ secrets.HELM_CHARTS_BOT }}
           charts_dir: ./
           charts_url: https://helm-charts.krateoplatformops.io
           owner: krateoplatformops
           repository: helm-charts
           branch: gh-pages
+          target_dir: log-service
