@@ -54,6 +54,8 @@ jobs:
         id: tagger
       - name: Replace Version in Chart.yaml
         run: sed -i 's/VERSION/${{ steps.tagger.outputs.VERSION_TAG }}/g' ./chart/Chart.yaml
+      - name: Dependency update
+        run: helm dependency update ./chart
       - name: Publish Helm chart
         uses: stefanprodan/helm-gh-pages@master
         with:
