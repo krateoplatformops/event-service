@@ -4,8 +4,8 @@ description: Krateo PlatformOps Log Service
 type: application
 icon: "https://github.com/krateoplatformops/community/blob/main/logos/black/icon.svg"
 
-version: VERSION
-appVersion: VERSION
+version: 1.2.3 #VERSION
+appVersion: 1.2.3 #VERSION
 
 maintainers:
   - name: Mauro Sala
