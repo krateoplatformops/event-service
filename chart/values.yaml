@@ -1,3 +1,5 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
 
 replicaCount: 1
 
@@ -24,10 +26,12 @@ serviceAccount:
 
 podAnnotations: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -38,47 +42,71 @@ securityContext: {}
 service:
   create: true
   type: ClusterIP
-  port: 80
+  http:
+    port: 80
+    targetPort: 8080
+  ssh:
+    enabled: false
+  # port: 29418
+  #   rsaKey: |-
+  #     -----BEGIN RSA PRIVATE KEY-----
+  #     -----END RSA PRIVATE KEY-----
 
-containerPorts:
+podContainerPorts:
   - name: http
     containerPort: 8080
     protocol: TCP
 
-podlivenessProbe:
-  httpGet:
-    path: /ping
-    port: 8080
-  timeoutSeconds: 5
-  periodSeconds: 30
+# put your env variables here
+podEnvFrom:
+  - configMapRef:
+    name: krateo-uri-config
 
-podReadinessProbe:
-  httpGet:
-    path: /ping
-    port: 8080
-  timeoutSeconds: 5
-  periodSeconds: 30
+podEnv:
+  - name: LOG_LEVEL
+    value: info
+  - name: "MONGODB_URI"
+    valueFrom:
+      secretKeyRef:
+        name: krateo-secret
+        key: MONGODB_URI
 
 ingress:
   enabled: true
   annotations:
     kubernetes.io/ingress.class: kong
-  hosts:
-    - host: log.krateo.site
-      paths:
-      - path: /*
-        pathType: Prefix
-        backend:
-          service:
-            name: log.krateo.site
-            port:
-              number: 80
-  tls: []
-  #  - secretName: log-krateo-tls
-  #    hosts:
-  #      - log.krateo.site
+  host: log.krateo.site
+  tls:
+    enabled: false
+    secret:
+      create: true
+      # `name` will only be used, if `create` is set to false to bind an
+      # existing secret. Otherwise the name will be automatically generated to
+      # avoid conflicts between multiple chart installations.
+      name:
+    # `cert`and `key` will only be used, if the secret will be created by
+    # this chart.
+    cert: |-
+      -----BEGIN CERTIFICATE-----
 
-resources: {}
+      -----END CERTIFICATE-----
+    key: |-
+      -----BEGIN RSA PRIVATE KEY-----
+
+      -----END RSA PRIVATE KEY-----
+
+resources:
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  requests:
+    memory: "128Mi"
+    cpu: "50m"
+  limits:
+    # you can monitor memory usage using "kubectl -n krateo top pods"
+    memory: "256Mi"
+    cpu: "100m"
 
 autoscaling:
   enabled: false
@@ -92,16 +120,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-podEnvFrom:
-    - configMapRef:
-        name: krateo-uri-config
-
-podEnv:
-  - name: 'LOG_LEVEL'
-    value: debug
-  - name: 'MONGODB_URI'
-    valueFrom:
-      secretKeyRef:
-        name: krateo-secret
-        key: MONGODB_URI
