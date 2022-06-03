@@ -11,7 +11,8 @@ const { logger } = require('../helpers/logger.helpers')
 router.post('/', async (req, res, next) => {
   try {
     const payload = {
-      ...req.body
+      ...req.body,
+      createdAt: new Date()
     }
     if (!payload.time) {
       payload.time = timeHelpers.currentTime()

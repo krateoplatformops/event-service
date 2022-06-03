@@ -29,12 +29,17 @@ const logSchema = new Schema({
   deploymentId: {
     type: String,
     required: true
+  },
+  createdAt: {
+    type: Date,
+    required: true
   }
 })
 
+logSchema.index({ time: 1, deploymentId: 1 }, { name: 'logIndex' })
 logSchema.index(
-  { time: 1, deploymentId: 1 },
-  { name: 'logIndex', expireAfterSeconds: envConstants.LOG_TTL }
+  { createdAt: 1 },
+  { name: 'logExpireIndex', expireAfterSeconds: parseInt(envConstants.LOG_TTL) }
 )
 
 module.exports = mongoose.model('Log', logSchema, dbConstants.COLLECTION_LOG)
