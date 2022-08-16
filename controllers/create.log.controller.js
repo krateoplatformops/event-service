@@ -23,7 +23,7 @@ router.post('/', async (req, res, next) => {
     Log.create(payload)
       .then(async (doc) => {
         if (req.body.deploymentId) {
-          const resp = await axios.post(envConstants.SOCKET_URI, doc)
+          const resp = await axios.post(envConstants.NOTIFICATION_URI, doc)
           logger.debug(JSON.stringify(resp.data))
         }
 

@@ -1,1 +1,1 @@
-# Krateo Service Logger
+# Krateo Event Service

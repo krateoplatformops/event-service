@@ -1,7 +1,7 @@
 {
-  "name": "log-service",
+  "name": "event-service",
   "version": "VERSION",
-  "description": "Krateo Log Service",
+  "description": "Krateo Event Service",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
