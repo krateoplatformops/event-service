@@ -1,40 +1,29 @@
 const express = require('express')
-const helmet = require('helmet')
 const cors = require('cors')({ origin: true, credentials: true })
 const responseTime = require('response-time')
-const mongoose = require('mongoose')
-const swaggerUi = require('swagger-ui-express')
-
-const { envConstants } = require('./constants')
 
 const app = express()
-app.use(helmet())
 app.use(cors)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(responseTime({ suffix: false, digits: 0 }))
 
-/* MongoDB */
-mongoose.Promise = global.Promise
-mongoose.connect(envConstants.MONGODB_URI)
-require('./models/log.model')
-
 /* Middlewares */
-const callLoggerMiddleware = require('./middlewares/call-logger.middleware')
-const errorLoggerMiddleware = require('./middlewares/error-logger.middleware')
+const callLoggerMiddleware = require('./service-library/middlewares/call-logger.middleware')
+const listMiddleware = require('./service-library/middlewares/list.middleware')
+const errorLoggerMiddleware = require('./service-library/middlewares/error-logger.middleware')
+const cookieIdentityMiddleware = require('./service-library/middlewares/cookie-identity.middleware')
 
 app.use(callLoggerMiddleware)
-
-/* OpenAPI */
-const swaggerDocument = require('./openapi')
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use(cookieIdentityMiddleware)
+app.use(listMiddleware)
 
 /* Routes */
-const statusRoutes = require('./routes/status.routes')
-const logRoutes = require('./routes/log.routes')
+const statusRoutes = require('./service-library/routes/status.routes')
+const eventRoutes = require('./routes/event.routes')
 
 app.use('/', statusRoutes)
-app.use('/', logRoutes)
+app.use('/', eventRoutes)
 
 app.use(errorLoggerMiddleware)
 
