@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format": "prettier --write .",
-    "format:git": "prettier --write . && git add -A ."
+    "format:git": "prettier --write . && git add -A .",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
