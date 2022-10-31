@@ -23,8 +23,6 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "npmlog": "^7.0.1",
-    "pino": "^8.7.0",
-    "pino-pretty": "^9.1.1",
     "request": "^2.88.2",
     "response-time": "^2.3.2",
     "winston": "^3.8.2"
