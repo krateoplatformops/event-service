@@ -9,23 +9,38 @@ const logger = require('../service-library/helpers/logger.helpers')
 
 router.post('/', async (req, res, next) => {
   try {
+    const b = req.body
     const payload = {
-      ...req.body
+      message: b.message,
+      time: b.time,
+      level: b.type.toLowerCase(),
+      reason: 'CreatedExternalResource',
+      source: b.source,
+      deploymentId: b.deploymentId
     }
     if (!payload.time) {
       payload.time = timeHelpers.currentTime()
     }
-    logger.debug(payload)
+    logger.info(payload)
+    // console.log('##############################')
+    // console.log(payload)
+    // console.log('##############################')
+    // logger.fatal('fatal')
+    // logger.error('error')
+    // logger.warn('warn')
+    // logger.info('info')
+    // logger.debug('debug')
+    // logger.trace('trace')
 
     axios
       .post(envConstants.NOTIFICATION_URI, payload)
       .then((response) => {
-        logger.debug(response)
+        logger.debug(response.data)
 
         res.status(200).json({ message: 'ok' })
       })
       .catch((err) => {
-        logger.silly(err)
+        logger.error(err)
 
         const { status, message } = axiosHelpers.errorHandler(err)
 
