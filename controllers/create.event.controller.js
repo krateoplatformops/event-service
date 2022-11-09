@@ -21,16 +21,7 @@ router.post('/', async (req, res, next) => {
     if (!payload.time) {
       payload.time = timeHelpers.currentTime()
     }
-    logger.info(payload)
-    // console.log('##############################')
-    // console.log(payload)
-    // console.log('##############################')
-    // logger.fatal('fatal')
-    // logger.error('error')
-    // logger.warn('warn')
-    // logger.info('info')
-    // logger.debug('debug')
-    // logger.trace('trace')
+    logger.debug(payload)
 
     axios
       .post(envConstants.NOTIFICATION_URI, payload)
